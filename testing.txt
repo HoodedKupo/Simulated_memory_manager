@@ -1,0 +1,17 @@
+For the test program I ran a malloc and free for all conceivable paths the program could take. For example freeing a chunk that has to merge to the left, to the right, or both,
+whether or not that chunk has reference to the header or not etc. I then made several output files to check the progress at the mid stages to check if each individual function works.
+The first test file is created right after all the allocations are made. This is to check that the forward and backward links in the header and the large empty block are changing as needed.
+After this we call free on r3 which is a middle chunk. This means that the program has to properly re-write the forward and backward links of the surrounding free blocks and then insert
+itself into the list. We attempt to free r3 again to test whether the program can tell if the pointer points beside a empty region versus a used region. This second free should fail.
+We then free r2 in order to test the ability of the program to merge two free chunks. This tests the ability of the function to merge with a chunk to the right. After this we free r5 in
+order to have a small free chunk for the next test.
+Next we try to allocate 21 bytes of data to r2. This tests if the function can understand that the first chunk, the one freed by r5, is to small and thus needs to scan the next chunk in
+the linked list. Furthermore, since the next free chunk is the one freed from r2 and r3 this means that the chunk is big enough to accommodate the request bytes and still split into a 
+smaller chunk. This tests the ability of the function to insert a new smaller chunk into the linked list without screwing up the header or any other forward or backwards links.
+We then try to allocate 20 bytes which is the exact size of the region cleared from r5 and thus test whether or not the function works on the boundaries and if we are able to remove free
+chunks from the middle of the linked list after the split function described in the previous allocation.
+We then free r1 to see if the region being close to the header does anything incorrectly. After this we output the memory to testFile2.txt to make sure that everything looks the way it
+should and making sure that the linked list doesn’t follow chronological order of chunks being added but instead by chunk size.
+We then free up the entire memory. myFree(69) serves to see if myFree can catch a completely bogus region number, one that isn’t right beside any Fsize. With the region fully cleared we
+can conclude that chunk merging to the left, to the right, and in both directions works as intended.
+testFile3.txt is created after this point in order to verify this claim.
