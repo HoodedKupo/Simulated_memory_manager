@@ -9,9 +9,13 @@ When memory is requested the system finds the first free block that is of suffic
 if the free block is sufficently larger than the requested block size then the user gets the requested memory size and the remaining block is marked as free.\
 When a block if freed all data is cleared then, if there is an adjacent free block, the two blocks are merged into one.
 ## Usage
+compile the program by running the make command.
 After compiling memManager.c with memManager.h you must first call initializeMemory() to initialize the simulated memory.\
 after this step call:\
 Relp myMalloc(size) to get a region of memory with usuable memory equal to or greater than size. The size will be larger if the available free chunk is not large enough to form another free chunk after allocation.\
 myFree(Relp) to free a reqgion of memory you aquired from myMalloc()\
 outputMemory() to display the status of the simulated memory.
+
+if you wish to run the test program you can do this by running the command 'make test'. The test results are in the indicated txt files.
+testing.txt describes the tests that are run using this command.
 
