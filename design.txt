@@ -1,0 +1,31 @@
+The design of myFree:
+The first step was to check if the region passed did indeed point to and allocated chunk. 
+The first step to this was to check if region was smaller than 4 since this cannot be a used region.
+This prevents unnessesary traversal of the memory. Next the function must check if the region passed
+points to one address over from the Fsize of a used chunk. To do this a probe is sent down the entire
+memory checking each chunk. If the region is next to the Fsize of a free chunk than the function 
+quits as that is not a valid region. 
+After checking the region the function needs to check if it can merge with a chunk to the left or 
+the right, keeping in mind the bounds of memory. Then adjust the Fsizeposition and Esizeposition 
+accordingly. After this it reconfigures the forward and backward links in the linked list in order
+to include itself in order of smallest to largest. This way the linked list will always link to the
+smallest free chunk first and the largest free chunk last.
+
+The design of myMalloc:
+there are two main types of allocation in this function: one where the entire free chunk is allocated,
+and another where the free chunk has to be split. The entire free chunk is allocated when the 
+requested number of bytes plus all the meta information is the same size as the free chunk, or what
+would remain is too small to form its own chunk. When the entire chunk is used the function links
+the previous chunk to what was once the free chunks forward link and vice versa for the next chunk.
+This removes the free chunk from the linked list. In the case where the chunk needs to be split the
+function removes the free chunk from the linked list and then inserts the remainder chunk back into the list.
+
+The design of outputMemory:
+The function simply iterates through the entirety of the simulated memory in a similar fashion to how
+myFree checks if the region given is a valid region. The function displays the size of used and free
+chunks. If two used chunks are side-by-side the function displays them as one chunk, such that the
+program can only ever output free, used in an alternating pattern.
+
+The design of initializeMemory:
+Calls malloc  for the total memory size then sets the header to the appropriate values. 
+The rest of the memory is treated as one large free chunk and has the Fsize and Esize adjust as such.
